@@ -22,6 +22,7 @@ try:
     DATA_FOLDER = config.get('settings', 'data_folder')
     OUTPUT_FOLDER = config.get('settings', 'output_folder')
     ACCURACY = config.getint('settings', 'accuracy')
+    EXPORT_FORMAT = config.get('settings', 'export_format')
 
     # 固定参数设置
     WGS84LONG = config.getfloat('settings', 'wgs84_long')
@@ -92,7 +93,16 @@ try:
         df = pd.concat([df, pd.DataFrame(rows)], ignore_index=True)
 
         output_file_name = os.path.splitext(file_name)[0] + ' Converted Data.csv'
-        df.to_csv(os.path.join(OUTPUT_FOLDER, output_file_name), index=False)
+        if  OUTPUT_FORMAT == 'CSV':
+            if EXPORT_FORMAT == '1':
+                df.to_csv(os.path.join(OUTPUT_FOLDER, output_file_name), index=False)
+            elif EXPORT_FORMAT == '2':
+                df.to_csv(os.path.join(OUTPUT_FOLDER, output_file_name), encoding='GBK', index=False)
+        elif OUTPUT_FORMAT == 'Excel':
+            if EXPORT_FORMAT == '1':
+                df.to_excel(os.path.join(OUTPUT_FOLDER, output_file_name), index=False)
+            elif EXPORT_FORMAT == '2':
+                df.to_excel(os.path.join(OUTPUT_FOLDER, output_file_name), encoding='GBK', index=False)
 
     print(f"总共跳过的NaN行数: {nan_count}")
     print(f"包含NaN数据的文件: {', '.join(files_with_nan)}")

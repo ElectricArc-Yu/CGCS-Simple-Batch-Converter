@@ -63,6 +63,8 @@ The following configurations are supported:
 - Output file location, based on the current folder (you can also copy the absolute path, but to prevent data from being overwritten, specifying the file name is not allowed)
 - 数据精确度
 - Data accuracy
+- 导出格式 1 - UTF-8 2 - GBK 默认为1
+- Export format 1 - UTF-8 2 - GBK default is 1
 
 ## License
 
