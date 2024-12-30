@@ -81,9 +81,11 @@ try:
     df = pd.concat([df, pd.DataFrame(rows)], ignore_index=True)
 
     if OUTPUT_FORMAT == 'CSV':
-        df.to_csv(os.path.join(OUTPUT_FOLDER, 'Converted Data.csv'), index=False)
+        output_file_name = os.path.splitext(os.path.basename(INPUT_FILE))[0] + ' Converted Data.csv'
+        df.to_csv(os.path.join(OUTPUT_FOLDER, output_file_name), index=False)
     elif OUTPUT_FORMAT == 'Excel':
-        df.to_excel(os.path.join(OUTPUT_FOLDER, 'Converted Data.xlsx'), index=False)
+        output_file_name = os.path.splitext(os.path.basename(INPUT_FILE))[0] + ' Converted Data.xlsx'
+        df.to_csv(os.path.join(OUTPUT_FOLDER, output_file_name), index=False)
     else:
         print('输出格式错误')
 
