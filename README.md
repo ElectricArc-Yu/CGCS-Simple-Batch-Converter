@@ -17,9 +17,9 @@ Only the `CoordinateTransformer.zip` file is needed for use basic function.
 
 使用功能只需下载CoordinateTransformer.zip文件即可。
 
-Extract the zip file and run the `CGCS_Simple_Batch_Converter.exe` file.
+Extract the zip file and run the 'CoordinateTransformer.exe` file.
 
-解压缩zip文件并运行`CGCS_Simple_Batch_Converter.exe`文件。
+解压缩zip文件并运行`CoordinateTransformer.exe`文件。
 
 Based on the requirements, modify the configuration file `config.cfg`, move the original data to the `data` folder, and run the script.
 
