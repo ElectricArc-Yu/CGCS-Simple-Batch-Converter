@@ -172,3 +172,7 @@ cython_debug/
 
 # idea cache
 .idea/
+.CoordinateTransformer.zip
+.CoordinateTransformer/
+.data/
+.output/

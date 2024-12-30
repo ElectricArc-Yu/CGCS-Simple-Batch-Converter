@@ -57,10 +57,10 @@ The following configurations are supported:
 - Output height or not, default is True and the height column will be retained regardless of the output
 - 输出格式 CSV或者Excel 默认为CSV
 -Output format, CSV or Excel, default is CSV
-- 原数据文件位置 基于当前文件夹 (你也可以复制绝对路径)
-- Input file location, based on the current folder (you can also copy the absolute path)
-- 输出文件位置 基于当前文件夹 （为防止覆盖原数据，输出文件位置默认为当前文件夹下的output文件夹，同时不允许指定文件名）
-- Output file location, based on the current folder (to prevent overwriting the original data, the output file location is set to the output folder under the current folder by default, and the file name is not allowed to be specified)
+- 原数据文件位置 基于当前文件夹 (你也可以复制绝对路径，会自动识别文件夹下的所有csv和xlsx文件)
+- Input file location, based on the current folder (you can also copy the absolute path, and all csv and xlsx files in the folder will be automatically recognized)
+- 输出文件位置 基于当前文件夹 （你也可以复制绝对路径，但为防止覆盖数据，不允许指定文件名）
+- Output file location, based on the current folder (you can also copy the absolute path, but to prevent data from being overwritten, specifying the file name is not allowed)
 - 数据精确度
 - Data accuracy
 

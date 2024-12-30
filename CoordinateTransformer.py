@@ -11,7 +11,6 @@ from tqdm import tqdm
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 try:
-
     # 读取配置文件
     config = configparser.ConfigParser()
     with open('config.cfg', 'r', encoding='utf-8') as configfile:
@@ -20,7 +19,7 @@ try:
     # 基本设置
     OUTPUT_HEIGHT = config.getboolean('settings', 'output_height')
     OUTPUT_FORMAT = config.get('settings', 'output_format')
-    INPUT_FILE = config.get('settings', 'input_file')
+    DATA_FOLDER = config.get('settings', 'data_folder')
     OUTPUT_FOLDER = config.get('settings', 'output_folder')
     ACCURACY = config.getint('settings', 'accuracy')
 
@@ -35,15 +34,6 @@ try:
     if not os.path.exists(OUTPUT_FOLDER):
         os.makedirs(OUTPUT_FOLDER)
 
-    # 读取数据
-    #如果是csv文件，使用pd.read_csv
-    #如果是excel文件，使用pd.read_excel
-    if INPUT_FILE.endswith('.csv'):
-        data = pd.read_csv(INPUT_FILE)
-    elif INPUT_FILE.endswith('.xlsx'):
-        data = pd.read_excel(INPUT_FILE)
-    print("数据总数: " + str(data.shape[0]))
-
     # 通过Pyproj将CGCS2000坐标转化为经纬度坐标
     def cgcs2000_to_wgs84(x, y):
         lat, lon = transform(CGCS2000, WGS84, x, y)
@@ -57,7 +47,7 @@ try:
         second_str = round_to_accuracy(second)
         return f"{degree}°{minute}′{second_str}″"
 
-    #保留小数点后几位
+    # 保留小数点后几位
     def round_to_accuracy(number):
         number_str = str(number)
         if '.' in number_str:
@@ -67,27 +57,45 @@ try:
             number_str = number_str + '.' + '0' * ACCURACY
         return number_str
 
-    df = pd.DataFrame(columns=['Point Set'])
+    # 读取DATA_FOLDER下所有的Excel和CSV文件
+    data_files = [file for file in os.listdir(DATA_FOLDER) if file.endswith(('.xlsx', '.csv'))]
+    total_files = len(data_files)
+    print(f"总文件数: {total_files}")
 
-    rows = []
+    nan_count = 0
+    files_with_nan = set()
 
-    for index, row in tqdm(data.iterrows(), total=data.shape[0], desc="转换中 (CGCS2000 转 WGS84)"):
-        lat, lon = cgcs2000_to_wgs84(row['X'], row['Y'])
-        if OUTPUT_HEIGHT:
-            rows.append({'Point Set': row['Point Set'], 'Latitude': float_to_dms(lat), 'Longitude': float_to_dms(lon), 'Height': str(row['Z'])})
+    for file_name in data_files:
+        input_file_path = os.path.join(DATA_FOLDER, file_name)
+        if file_name.endswith('.xlsx'):
+            data = pd.read_excel(input_file_path)
+        elif file_name.endswith('.csv'):
+            data = pd.read_csv(input_file_path)
         else:
-            rows.append({'Point Set': row['Point Set'], 'Latitude': float_to_dms(lat), 'Longitude': float_to_dms(lon), 'Height': ''})
+            break
+        print(f"正在处理文件: {file_name}, 数据总数: {data.shape[0]}")
 
-    df = pd.concat([df, pd.DataFrame(rows)], ignore_index=True)
+        df = pd.DataFrame(columns=['Point Set'])
+        rows = []
 
-    if OUTPUT_FORMAT == 'CSV':
-        output_file_name = os.path.splitext(os.path.basename(INPUT_FILE))[0] + ' Converted Data.csv'
+        for index, row in tqdm(data.iterrows(), total=data.shape[0], desc=f"转换中 (CGCS2000 转 WGS84) - {file_name}"):
+            if pd.isna(row['X']) or pd.isna(row['Y']):
+                nan_count += 1
+                files_with_nan.add(file_name)
+                continue
+            lat, lon = cgcs2000_to_wgs84(row['X'], row['Y'])
+            if OUTPUT_HEIGHT:
+                rows.append({'Point Set': row['Point Set'], 'Latitude': float_to_dms(lat), 'Longitude': float_to_dms(lon), 'Height': str(row['Z'])})
+            else:
+                rows.append({'Point Set': row['Point Set'], 'Latitude': float_to_dms(lat), 'Longitude': float_to_dms(lon), 'Height': ''})
+
+        df = pd.concat([df, pd.DataFrame(rows)], ignore_index=True)
+
+        output_file_name = os.path.splitext(file_name)[0] + ' Converted Data.csv'
         df.to_csv(os.path.join(OUTPUT_FOLDER, output_file_name), index=False)
-    elif OUTPUT_FORMAT == 'Excel':
-        output_file_name = os.path.splitext(os.path.basename(INPUT_FILE))[0] + ' Converted Data.xlsx'
-        df.to_csv(os.path.join(OUTPUT_FOLDER, output_file_name), index=False)
-    else:
-        print('输出格式错误')
+
+    print(f"总共跳过的NaN行数: {nan_count}")
+    print(f"包含NaN数据的文件: {', '.join(files_with_nan)}")
 
 except Exception as e:
     print(f"发生错误: {e}")
