@@ -17,7 +17,7 @@ Only the `CoordinateTransformer.zip` file is needed for use basic function.
 
 使用功能只需下载CoordinateTransformer.zip文件即可。
 
-Extract the zip file and run the 'CoordinateTransformer.exe` file.
+Extract the zip file and run the `CoordinateTransformer.exe` file.
 
 解压缩zip文件并运行`CoordinateTransformer.exe`文件。
 
