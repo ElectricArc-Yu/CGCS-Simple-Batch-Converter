@@ -25,6 +25,16 @@ Based on the requirements, modify the configuration file `config.cfg`, move the 
 
 根据需求更改配置文件`config.cfg`，并将原数据移动到`data`文件夹中，运行脚本即可。
 
+## Original Data Format
+
+The original data should be in the following format:
+
+原始数据应该是以下格式：
+
+| Point Set | X | Y | Z |
+|-----------| --- | --- | --- |
+| Example 1 | 123.4567 | 123.4567 | 123.4567 |
+
 ## Configuration
 
 The configuration file `config.cfg` is used to specify the input and output formats of the data.
