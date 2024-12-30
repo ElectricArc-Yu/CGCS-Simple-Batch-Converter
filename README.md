@@ -10,7 +10,7 @@ Download the latest release from the following link:
 
 下载最新版本的脚本：
 ```
-https://github.com/ElectricArc-Yu/CGCS-Simple-Batch-Converter/releases/tag/v1.0
+https://github.com/ElectricArc-Yu/CGCS-Simple-Batch-Converter/releases
 ```
 
 Only the `CoordinateTransformer.zip` file is needed for use basic function.
